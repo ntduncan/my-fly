@@ -1,0 +1,33 @@
+POST http://localhost:5001
+content-type: application/json
+
+{
+    "id": "1",
+    "bait": ["Hares Ear", "Ant"],
+    "location": "test location",
+    "img": "https://img.search.brave.com/liCzQTkCW0p20C40rRcsGZCnLXm1E4cH3eZCE9nW5to/rs:fit:864:570:1/g:ce/aHR0cHM6Ly93d3cu/bWFyaW9ub25saW5l/LmNvbS9tZWRpYS8y/MDE1LzAzL1JhaW5i/b3ctVHJvdXQuanBn",
+    "date": "4/1/22",
+    "fish": [{"species":"rainbow", "length":"14"}]
+}
+
+###
+GET http://localhost:5001/
+
+###
+GET http://localhost:5001/627b3f28553d46f78d7cafd5
+
+###
+DELETE http://localhost:5001/627b3f28553d46f78d7cafd5
+
+###
+PUT http://localhost:5001/627b3e76d6a48020c1b2b1ef
+content-type: application/json
+
+{
+    "id": "1",
+    "bait": ["Hares Ear", "Ant"],
+    "location": "test location",
+    "img": "https://img.search.brave.com/liCzQTkCW0p20C40rRcsGZCnLXm1E4cH3eZCE9nW5to/rs:fit:864:570:1/g:ce/aHR0cHM6Ly93d3cu/bWFyaW9ub25saW5l/LmNvbS9tZWRpYS8y/MDE1LzAzL1JhaW5i/b3ctVHJvdXQuanBn",
+    "date": "4/1/22",
+    "fish": [{"species":"cutthrout", "length":"14"}]
+}
