@@ -4,11 +4,11 @@ import { StyleSheet, Text, View } from "react-native";
 export function LargeCard({ children, title, content }) {
   return (
     <View style={styles.largeCardContainer}>
-      <View style={styles.title}>
-        <Text>{title}</Text>
-      </View>
-      <View style={styles.content}>
-        <Text>{content}</Text>
+      
+        <Text style={styles.title}>{title}</Text>
+      
+      <View>
+        <Text style={styles.content}>{content}</Text>
       </View>
     </View>
   );
@@ -25,19 +25,22 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 160,
     height: 160,
-    padding: 10,
-    marginBottom: 40
+    paddingTop: 25,
+    marginBottom: 40,
   },
   title: {
-    fontWeight: 600,
+    fontWeight: "bold",
+    fontSize: 20,
     color: "#5248CB",
-    height: "20%"
+    height: "20%",
 
   },
   content: {
-    fontWeight: 900,
-    fontSize: "2em",
+    fontWeight: "bold",
+    fontSize: 20,
     color: "#5248CB",
-    height: "80%"
+    height: "80%",
+    textAlign: "center",
+    marginTop: 20,
   },
 });

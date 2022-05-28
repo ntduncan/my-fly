@@ -1,6 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
 import {
-  useState,
   StyleSheet,
   View,
   Button,

@@ -9,18 +9,30 @@ import axios from "axios";
 export default function App() {
   const [trips, setTrips] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const loadingWheel = 0;
 
   const getTrips = () => {
-    // fetch("https://myfly-fishing-api.herokuapp.com/")
-    //   .then((response) => {
-    //     console.log(response.json());
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    fetch("https://myfly-fishing-api.herokuapp.com/")
+      .then((response) => {
+        return response.json();
+      })
+      .then(data => {
+        setTrips(data)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  getTrips();
+  const getTotalFish = () => {
+    if(trips?.length > 0){
+      let count = 0;
+      trips.forEach(trip => { count += trip.fish.length})
+      return count;
+    }
+  }
+
+  getTrips(); 
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,8 +52,8 @@ export default function App() {
 
       <View style={styles.dashboardBody}>
         <View style={styles.main}>
-          <LargeCard title="Plan A Trip" content="-->" />
-          <LargeCard title="Title" content="Content" />
+          <LargeCard title="Total Trips" content={trips?.length} />
+          <LargeCard title="Total Fish" content={getTotalFish()} />
           <LargeCard title="Next Trip" content="Other content body" />
           <LargeCard title="Last Trip" content="Apr 8th" />
 
