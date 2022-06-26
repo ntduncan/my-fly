@@ -11,6 +11,7 @@ import {
 
 export function DetailCard({ location, fish, img, bait, date }) {
   const [catchHidden, setCatchHidden] = useState(false);
+  const [imgProvided, setImgProvided] = useState(img !== "Image" ? true : false);
 
   return (
     <Pressable
@@ -21,12 +22,17 @@ export function DetailCard({ location, fish, img, bait, date }) {
     >
       <View style={styles.detailCardContainer}>
         <View style={styles.mainContent}>
-          <Image
+          {imgProvided && <Image
             source={{
-              uri: img,
+              uri: img ,
             }}
             style={styles.image}
-          />
+          />}
+          {!imgProvided && <Image 
+          source={require("../assets/images/noImage.png")}
+          style={styles.image}
+          />}
+
           <View style={styles.cardCenter}>
             <Text style={styles.headerText}>{location}</Text>
             <Text style={[styles.headerText, styles.lightText]}>{date}</Text>
