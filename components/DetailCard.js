@@ -62,7 +62,7 @@ export function DetailCard({ location, fish, img, bait, date }) {
                 data={bait}
                 keyExtractor={(item, index) => item + index}
                 renderItem={({ item }) => (
-                  <Text style={styles.bodyText}>- {item}</Text>
+                  <Text style={styles.bodyText}>{item},</Text>
                 )}
               />
             </View>

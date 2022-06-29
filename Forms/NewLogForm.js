@@ -15,8 +15,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Formik } from "formik";
-import * as Yup from "yup";
-
+// import * as Yup from "yup";
 
 export default function NewLogForm() {
   //State for the modal
@@ -24,23 +23,25 @@ export default function NewLogForm() {
   const [fishlist, setFishlist] = useState([]);
   const [species, setSpecies] = useState("");
   const [length, setLength] = useState("");
+  const [bait, setBait] = useState("");
 
   const addFish = (e) => {
     e.preventDefault();
 
-    const fish = {"species": species, "length": length};
-    setFishlist([...fishlist, fish]);
-    setSpecies("");
-    setLength("");
-  }
+    const fish = { species: species, length: length };
+    if(fish.species !== "" && fish.length !== ""){      
+      setFishlist([...fishlist, fish]);
+      setSpecies("");
+      setLength("");
+    }
+  };
 
   const addBait = (e) => {
     e.preventDefault();
     //add bait to list
     setBaitList([...baitList, bait]);
     setBait("");
-  }
-
+  };
 
   return (
     <ScrollView>
@@ -54,6 +55,7 @@ export default function NewLogForm() {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
           >
+
             <Formik
               initialValues={{
                 location: "Location",
@@ -61,27 +63,31 @@ export default function NewLogForm() {
                 img: "Image",
                 // bait: ["Bait"],
               }}
-
               onSubmit={(values) => {
+                const fishingLog = {
+                  location: values.location,
+                  date: values.date,
+                  img: values.img,
+                  bait: baitList,
+                  fish: fishlist,
+                };
 
-                  const fishingLog = {
-                      "location": values.location,  
-                      "date": values.date,
-                      "img": values.img,
-                      "bait": baitList,
-                      "fish": fishlist,
-                    }
-                    
-                    fetch("https://myfly-fishing-api.herokuapp.com", {
-                        method: "POST",
-                        headers: {"content-type": "application/json"},
-                        body: JSON.stringify(fishingLog),
-                    })
-                    .catch(err => console.log(err))
-                    
-                      navigator.navigate("Dashboard"); //TODO: Not working
+                fetch("https://myfly-fishing-api.herokuapp.com", {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify(fishingLog),
+                })
+                  .then(() => {
+                    setFishlist([]);
+                    setBaitList([]);
+                    setSpecies("");
+                    setLength("");
+                    setBait("");
+                  })
+                  .catch((err) => console.log(err));
+
+                navigator.navigate("Dashboard"); //TODO: Not working
               }}
-
             >
               {(props) => {
                 return (
@@ -105,31 +111,45 @@ export default function NewLogForm() {
                       onChangeText={props.handleChange("img")}
                     />
 
-                    {fishlist && fishlist.map((fish) => {<Text>{fish.species} - {fish.length}"</Text>})}
+                    <View>
+                      {fishlist.length > 0 &&
+                        fishlist.map((item, index) => {
+                         return <Text key={index}>
+                            {"\n"}{item.species} - {item.length}"
+                          </Text>;
+                        })}
+                    </View>
+
                     <TextInput
                       style={styles.textInput}
                       placeholder="Species"
+                      autoCapitalize="words"
                       value={species}
-                      onChangeText={setSpecies(prop.target.value)}
+                      onChangeText={(text) => {
+                        setSpecies(text);
+                        console.log(species);
+                      }}
                     />
                     <TextInput
                       style={styles.textInput}
                       placeholder="Length"
                       value={length}
-                      onChangeText={setLength(prop.target.value)}
+                      onChangeText={(text) => setLength(text)}
                       keyboardType="numeric"
                     />
                     <Button title="Add Fish" onPress={addFish} />
-                    
-                    {bait && bait.map((bait) => {<Text>{bait}</Text>})}
+
+                    {baitList.length > 0 &&
+                      baitList.map((item) => {
+                        return <Text>{item}</Text>;
+                      })}
                     <TextInput
                       style={styles.textInput}
                       placeholder="Bait"
-                      value={prop.target.value}
-                      onChangeText={setBait(prop.target.value)}
+                      value={bait}
+                      onChangeText={(text) => setBait(text)}
                     />
                     <Button title="Add Bait" onPress={addBait} />
-
                     <Pressable
                       style={styles.submitButton}
                       onPress={() => {
