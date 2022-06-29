@@ -4,9 +4,8 @@ import { StyleSheet, Text, View } from "react-native";
 export function LargeCard({ children, title, content }) {
   return (
     <View style={styles.largeCardContainer}>
-      
-        <Text style={styles.title}>{title}</Text>
-      
+      <Text style={styles.title}>{title}</Text>
+
       <View>
         <Text style={styles.content}>{content}</Text>
       </View>
@@ -33,7 +32,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#5248CB",
     height: "20%",
-
   },
   content: {
     fontWeight: "bold",

@@ -15,11 +15,33 @@ import {
   ScrollView,
 } from "react-native";
 import { Formik } from "formik";
-import axios from "axios";
-// import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-// import { KeyboardAvoidingView } from "react-native-web";
+import * as Yup from "yup";
+
 
 export default function NewLogForm() {
+  //State for the modal
+  const [baitList, setBaitList] = useState([]);
+  const [fishlist, setFishlist] = useState([]);
+  const [species, setSpecies] = useState("");
+  const [length, setLength] = useState("");
+
+  const addFish = (e) => {
+    e.preventDefault();
+
+    const fish = {"species": species, "length": length};
+    setFishlist([...fishlist, fish]);
+    setSpecies("");
+    setLength("");
+  }
+
+  const addBait = (e) => {
+    e.preventDefault();
+    //add bait to list
+    setBaitList([...baitList, bait]);
+    setBait("");
+  }
+
+
   return (
     <ScrollView>
       <TouchableWithoutFeedback
@@ -37,16 +59,17 @@ export default function NewLogForm() {
                 location: "Location",
                 date: "Date",
                 img: "Image",
-                bait: ["Bait"],
+                // bait: ["Bait"],
               }}
+
               onSubmit={(values) => {
 
                   const fishingLog = {
                       "location": values.location,  
                       "date": values.date,
                       "img": values.img,
-                      "bait": [values.bait],
-                      "fish": [{"species": values.fish.species, "length": values.fish.length}],
+                      "bait": baitList,
+                      "fish": fishlist,
                     }
                     
                     fetch("https://myfly-fishing-api.herokuapp.com", {
@@ -56,7 +79,7 @@ export default function NewLogForm() {
                     })
                     .catch(err => console.log(err))
                     
-                    navigator.navigate("Dashboard");
+                      navigator.navigate("Dashboard"); //TODO: Not working
               }}
 
             >
@@ -81,22 +104,31 @@ export default function NewLogForm() {
                       placeholder="Image"
                       onChangeText={props.handleChange("img")}
                     />
+
+                    {fishlist && fishlist.map((fish) => {<Text>{fish.species} - {fish.length}"</Text>})}
                     <TextInput
                       style={styles.textInput}
                       placeholder="Species"
-                      onChangeText={props.handleChange("fish.species")}
+                      value={species}
+                      onChangeText={setSpecies(prop.target.value)}
                     />
                     <TextInput
                       style={styles.textInput}
                       placeholder="Length"
-                      onChangeText={props.handleChange("fish.length")}
+                      value={length}
+                      onChangeText={setLength(prop.target.value)}
                       keyboardType="numeric"
                     />
+                    <Button title="Add Fish" onPress={addFish} />
+                    
+                    {bait && bait.map((bait) => {<Text>{bait}</Text>})}
                     <TextInput
                       style={styles.textInput}
                       placeholder="Bait"
-                      onChangeText={props.handleChange("bait")}
+                      value={prop.target.value}
+                      onChangeText={setBait(prop.target.value)}
                     />
+                    <Button title="Add Bait" onPress={addBait} />
 
                     <Pressable
                       style={styles.submitButton}
