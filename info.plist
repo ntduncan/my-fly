@@ -1,4 +1,5 @@
 <key>NSAppTransportSecurity</key>
+<key>NSPhotoLibraryUsageDescription</key>
 <dict>
     <key>NSAllowsArbitraryLoads</key>
     <true/>

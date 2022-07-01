@@ -69,16 +69,15 @@ useEffect(() => {
           <LargeCard title="Next Trip" content="Other content body" />
           <LargeCard title="Last Trip" content="Apr 8th" />
 
+          <Pressable onPress={() => navigation.navigate("AddNewLogView")}>
+            <View style={styles.footer}>
+              <Text style={[styles.headerText, styles.textLight]}>Log a Trip</Text>
+            </View>
+          </Pressable>
 
           <Pressable onPress={() => setModalVisible(true)}>
             <View style={[styles.footer] }>
               <Text style={[styles.headerText, styles.textLight]}>Plan a Trip</Text>
-            </View>
-          </Pressable>
-
-          <Pressable onPress={() => navigation.navigate("AddNewLogView")}>
-            <View style={styles.footer}>
-              <Text style={[styles.headerText, styles.textLight]}>Log a Trip</Text>
             </View>
           </Pressable>
 

@@ -9,7 +9,7 @@ const screens = {
         screen: Dashboard,
     },
     FishingLogListView: {
-        screen: FishingLogListView
+        screen: FishingLogListView,
     },
     AddNewLogView: {
         screen: AddNewLogView

@@ -4,7 +4,6 @@ import {
   View,
   Button,
   Pressable,
-  SafeAreaView,
   Text,
   TextInput,
   Keyboard,
@@ -14,6 +13,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Formik } from "formik";
+import {CameraRoll} from "@react-native-community/cameraroll";
 // import * as Yup from "yup";
 
 export default function NewLogForm({ navigation }) {
@@ -27,12 +27,11 @@ export default function NewLogForm({ navigation }) {
   const addFish = (e) => {
     e.preventDefault();
 
-    const fish = { species: species, length: length?length:"-" };
-    if(fish.species !== ""){      
+    const fish = { species: species, length: length ? length : "-" };
+    if (fish.species !== "") {
       setFishlist([...fishlist, fish]);
       setSpecies("");
       setLength("");
-      
     }
   };
 
@@ -44,148 +43,138 @@ export default function NewLogForm({ navigation }) {
   };
 
   return (
-    <ScrollView>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss;
-        }}
-      >
-        <SafeAreaView style={styles.newTripContainer}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
-          >
+    // <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss;
+      }}
+    >
+      <View style={styles.inner}>
+      <Text style={styles.pageTitle}>Add New Fishing Log</Text>
+        <Formik
+          initialValues={{
+            location: "Location",
+            date: "Date",
+            img: "Image",
+            // bait: ["Bait"],
+          }}
+          onSubmit={(values) => {
+            const fishingLog = {
+              location: values.location,
+              date: values.date,
+              img: values.img,
+              bait: baitList,
+              fish: fishlist,
+            };
 
-            <Formik
-              initialValues={{
-                location: "Location",
-                date: "Date",
-                img: "Image",
-                // bait: ["Bait"],
-              }}
-              onSubmit={(values) => {
-                const fishingLog = {
-                  location: values.location,
-                  date: values.date,
-                  img: values.img,
-                  bait: baitList,
-                  fish: fishlist,
-                };
+            fetch("https://myfly-fishing-api.herokuapp.com", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(fishingLog),
+            })
+              .then(() => {
+                setFishlist([]);
+                setBaitList([]);
+                setSpecies("");
+                setLength("");
+                setBait("");
+              })
+              .catch((err) => console.log(err));
 
-                fetch("https://myfly-fishing-api.herokuapp.com", {
-                  method: "POST",
-                  headers: { "content-type": "application/json" },
-                  body: JSON.stringify(fishingLog),
-                })
-                  .then(() => {
-                    setFishlist([]);
-                    setBaitList([]);
-                    setSpecies("");
-                    setLength("");
-                    setBait("");
-                  })
-                  .catch((err) => console.log(err));
+            navigation.navigate("Dashboard"); //TODO: navigate to dashboard
+          }}
+        >
+          {(props) => {
+            return (
+              <View style={styles.formInputs}>
+                <View style={styles.formGroup}>
+                <Text style={styles.smallHeader}>{"\n"}Trip Details</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Location"
+                  onChangeText={props.handleChange("location")}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Date"
+                  onChangeText={props.handleChange("date")}
+                  multiline={true}
+                  editable={true}
+                  dataDetectorTypes="calendarEvent"
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Image"
+                  onChangeText={props.handleChange("img")}
+                />
+                </View>
 
-                  navigation.navigate("Dashboard"); //TODO: navigate to dashboard
-              }}
-            >
-              {(props) => {
-                return (
+                <View style={styles.formGroup}>
+                  <Text style={styles.smallHeader}>{"\n"}Add a fish</Text>
                   <View>
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Location"
-                      onChangeText={props.handleChange("location")}
-                    />
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Date"
-                      onChangeText={props.handleChange("date")}
-                      multiline={true}
-                      editable={true}
-                      dataDetectorTypes="calendarEvent"
-                    />
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Image"
-                      onChangeText={props.handleChange("img")}
-                    />
-
-                    <View>
-                      {fishlist.length > 0 &&
-                        fishlist.map((item, index) => {
-                         return <Text key={index}>
-                            {"\n"}{item.species} - {item.length}"
-                          </Text>;
-                        })}
-                    </View>
-
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Species"
-                      autoCapitalize="words"
-                      value={species}
-                      onChangeText={(text) => {
-                        setSpecies(text);
-                        console.log(species);
-                      }}
-                    />
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Length"
-                      value={length}
-                      onChangeText={(text) => setLength(text)}
-                      keyboardType="numeric"
-                    />
-                    <Button title="Add Fish" onPress={addFish} />
-
-                    {baitList.length > 0 &&
-                      baitList.map((item) => {
-                        return <Text>{item}</Text>;
+                    {fishlist.length > 0 &&
+                      fishlist.map((item, index) => {
+                        return (
+                          <Text key={index}>
+                            {"\n"}
+                            {item.species} - {item.length}"
+                          </Text>
+                        );
                       })}
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Bait"
-                      value={bait}
-                      onChangeText={(text) => setBait(text)}
-                    />
-                    <Button title="Add Bait" onPress={addBait} />
-                    <Pressable
-                      style={styles.submitButton}
-                      onPress={() => {
-                        props.handleSubmit();
-                      }}
-                    >
-                      <Text>Submit</Text>
-                    </Pressable>
                   </View>
-                );
-              }}
-            </Formik>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Species"
+                    autoCapitalize="words"
+                    value={species}
+                    onChangeText={(text) => {
+                      setSpecies(text);
+                      console.log(species);
+                    }}
+                  />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Length"
+                    value={length}
+                    onChangeText={(text) => setLength(text)}
+                    keyboardType="numeric"
+                  />
+                  <Button title="Add Fish" onPress={addFish} />
+                </View>
+
+                <View style={styles.formGroup}>
+                  <Text style={styles.smallHeader}>{"\n"}Add your bait</Text>
+                  {baitList.length > 0 &&
+                    baitList.map((item) => {
+                      return <Text>{item}</Text>;
+                    })}
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Bait"
+                    value={bait}
+                    onChangeText={(text) => setBait(text)}
+                  />
+                  <Button title="Add Bait" onPress={addBait} />
+                </View>
+                <Pressable
+                  style={styles.submitButton}
+                  onPress={() => {
+                    props.handleSubmit();
+                  }}
+                >
+                  <Text>Submit</Text>
+                </Pressable>
+              </View>
+            );
+          }}
+        </Formik>
+      </View>
+    </TouchableWithoutFeedback>
+    // </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#7B61FF",
-  },
-  newTripContainer: {
-    display: "flex",
-    flex: 1,
-    flexDirection: "column",
-    //   justifyContent: "center",
-    alignItems: "center",
-    margin: 20,
-    marginTop: 140,
-    borderRadius: 20,
-    height: "80%",
-    padding: 40,
-  },
   textInput: {
     backgroundColor: "#fff",
     margin: 10,
@@ -206,7 +195,36 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     textAlign: "center",
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  inner: {
+    paddingBottom: 40,
+    flex: 1,
+    justifyContent: "center",
+  },
+  formInputs: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  smallHeader: {
+    fontSize: 20,
+    color: "#fff",
+    marginLeft: 10,
+    // margin: 10,
+    
+  },
+  formGroup: {
+    backgroundColor: "#d4d4d4",
+    borderRadius: 20,
+    margin: 10,
+  },
+  pageTitle: {
+    margin: 20,
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#fff",
   },
 });
