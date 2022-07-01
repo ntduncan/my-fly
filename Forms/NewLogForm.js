@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
   StyleSheet,
   View,
@@ -17,7 +16,7 @@ import {
 import { Formik } from "formik";
 // import * as Yup from "yup";
 
-export default function NewLogForm() {
+export default function NewLogForm({ navigation }) {
   //State for the modal
   const [baitList, setBaitList] = useState([]);
   const [fishlist, setFishlist] = useState([]);
@@ -28,11 +27,12 @@ export default function NewLogForm() {
   const addFish = (e) => {
     e.preventDefault();
 
-    const fish = { species: species, length: length };
-    if(fish.species !== "" && fish.length !== ""){      
+    const fish = { species: species, length: length?length:"-" };
+    if(fish.species !== ""){      
       setFishlist([...fishlist, fish]);
       setSpecies("");
       setLength("");
+      
     }
   };
 
@@ -86,7 +86,7 @@ export default function NewLogForm() {
                   })
                   .catch((err) => console.log(err));
 
-                navigator.navigate("Dashboard"); //TODO: Not working
+                  navigation.navigate("Dashboard"); //TODO: navigate to dashboard
               }}
             >
               {(props) => {

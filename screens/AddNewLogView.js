@@ -2,10 +2,10 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import NewLogForm from '../Forms/NewLogForm';
 
-export function AddNewLogView() {
+export function AddNewLogView({navigation}) {
     return (
         <View>
-            <NewLogForm />
+            <NewLogForm navigation={navigation}/>
         </View>
     );
 }
