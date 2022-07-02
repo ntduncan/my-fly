@@ -17,7 +17,6 @@ export function DetailCard({ location, fish, img, bait, date, plannedTrip }) {
     <Pressable
       onPress={() => {
         setCatchHidden(!catchHidden);
-        console.log(catchHidden);
       }}
     >
       <View style={[styles.detailCardContainer, plannedTrip?styles.smallPaddig:null]}>

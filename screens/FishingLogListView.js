@@ -33,6 +33,7 @@ export function FishingLogListView({navigation}) {
                   date={item.date}
                   fish={item.fish}
                   bait={item.bait}
+                  plannedTrip={item.plannedTrip}
                   />
           )}
         />)
@@ -41,7 +42,7 @@ export function FishingLogListView({navigation}) {
         } else {
           setFishingLogs(
           <FlatList
-          data={navigation.getParam("trips")}
+          data={navigation.getParam("plannedTrips")}
           renderItem={({item}) => (
   
                   item?.plannedTrip === true && <DetailCard 

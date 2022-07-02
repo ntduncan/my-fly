@@ -13,9 +13,11 @@ import { LargeCard } from "../components/LargeCard";
 import { NewTripForm } from "../Forms/NewTripForm";
 
 export function Dashboard({ navigation }) {
-  const [trips, setTrips] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const [trips, setTrips] = useState();
   const [nextTrips, setNextTrips] = useState([]);
+  const [nextTrip, setNextTrip] = useState();
+  const [lastTrip, setLastTrip] = useState();
   const loadingWheel = 0;
   let dropDownAlertRef = useRef();
 
@@ -26,15 +28,24 @@ useEffect(() => {
       return response.json();
     })
     .then((data) => {
-      setTrips(data);
-      setNextTrips(trips.filter((trip) => trip?.plannedTrip));
+      
+      setTrips(data.filter((trip) => !trip?.plannedTrip));
+      setNextTrips(data.filter((trip) => trip?.plannedTrip));
       dropDownAlertRef.alertWithType('success', 'Success', 'Trips Loaded');
+
+      var ndate = new Date(nextTrips[0].date);
+      ndate = ndate.toDateString().split(" ");
+      setNextTrip(`${ndate[1]} ${ndate[2]}`);
+
+      var ldate = new Date(trips[0].date);
+      ldate = ldate.toDateString().split(" ");
+      setLastTrip(`${ldate[1]} ${ldate[2]}`);
     })
     .catch((err) => {
       console.log(err);
     });
 
-  }, []);
+  }, [navigation.navigate]);
 
   const getTotalFish = () => {
     if (trips?.length > 0) {
@@ -71,12 +82,12 @@ useEffect(() => {
 
       <View style={styles.dashboardBody}>
         <View style={styles.main}>
-          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips})}>
+          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips})}>
             <LargeCard title="Total Trips" content={trips?.length} />
           </Pressable>
           <LargeCard title="Total Fish" content={getTotalFish()} />
-          <LargeCard title="Next Trip" content="Other content body" />
-          <LargeCard title="Last Trip" content="Apr 8th" />
+          <LargeCard title="Next Trip" content={nextTrip} />  
+          <LargeCard title="Last Trip" content={lastTrip} />
 
           <Pressable onPress={() => navigation.navigate("AddNewLogView")}>
             <View style={styles.footer}>

@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
     height: "20%",
   },
   content: {
-    fontWeight: "bold",
-    fontSize: 20,
+    fontWeight: "600",
+    fontSize: 30,
     color: "#5248CB",
     height: "80%",
     textAlign: "center",
