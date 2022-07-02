@@ -9,7 +9,7 @@ import {
   SectionList,
 } from "react-native";
 
-export function DetailCard({ location, fish, img, bait, date }) {
+export function DetailCard({ location, fish, img, bait, date, plannedTrip }) {
   const [catchHidden, setCatchHidden] = useState(false);
   const [imgProvided, setImgProvided] = useState(img !== "Image" ? true : false);
 
@@ -20,9 +20,9 @@ export function DetailCard({ location, fish, img, bait, date }) {
         console.log(catchHidden);
       }}
     >
-      <View style={styles.detailCardContainer}>
+      <View style={[styles.detailCardContainer, plannedTrip?styles.smallPaddig:null]}>
         <View style={styles.mainContent}>
-          {imgProvided && <Image
+          {!plannedTrip && imgProvided && <Image
             source={{
               uri: img ,
             }}
@@ -37,11 +37,11 @@ export function DetailCard({ location, fish, img, bait, date }) {
             <Text style={styles.headerText}>{location}</Text>
             <Text style={[styles.headerText, styles.lightText]}>{date}</Text>
           </View>
-          <View>
+          {!plannedTrip && <View>
             <Text style={styles.quantity}>{fish.length}</Text>
-          </View>
+          </View>}
         </View>
-        {catchHidden && (
+        {catchHidden && !plannedTrip &&  (
           <View style={styles.catchData}>
             <View>
               <Text style={[styles.headerText, styles.lightText]}>Fish:</Text>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E0E9F6",
     margin: 10,
     borderRadius: 20,
-    // padding: (10, 10, 10, 0),
+    
   },
   mainContent: {
     display: "flex",
@@ -126,4 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
   },
+  smallPaddig: {
+    padding: 10,
+  }
 });

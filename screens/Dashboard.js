@@ -7,15 +7,17 @@ import {
   Modal,
   SafeAreaView,
 } from "react-native";
-import { useState, useEffect } from "react";
+import DropdownAlert from 'react-native-dropdownalert';
+import { useState, useEffect, useRef } from "react";
 import { LargeCard } from "../components/LargeCard";
-import { SmallCard } from "../components/DetailCard";
 import { NewTripForm } from "../Forms/NewTripForm";
 
 export function Dashboard({ navigation }) {
   const [trips, setTrips] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const [nextTrips, setNextTrips] = useState([]);
   const loadingWheel = 0;
+  let dropDownAlertRef = useRef();
 
   //Set Trips on Initial Render
 useEffect(() => {
@@ -25,12 +27,12 @@ useEffect(() => {
     })
     .then((data) => {
       setTrips(data);
+      setNextTrips(trips.filter((trip) => trip?.plannedTrip));
+      dropDownAlertRef.alertWithType('success', 'Success', 'Trips Loaded');
     })
     .catch((err) => {
       console.log(err);
     });
-
-    console.log(trips)
 
   }, []);
 
@@ -46,6 +48,13 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
+      <DropdownAlert
+        ref={(ref) => {
+          if (ref) {
+            dropDownAlertRef = ref;
+          }
+        }}
+      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -55,7 +64,7 @@ useEffect(() => {
           setModalVisible(!modalVisible);
         }}
       >
-        <NewTripForm setModalVisible={setModalVisible} />
+        <NewTripForm setModalVisible={setModalVisible} dropDownAlertRef={dropDownAlertRef}/>
       </Modal>
 
       <Text style={styles.headerText}>MyFly Dashboard</Text>

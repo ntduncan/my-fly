@@ -9,14 +9,35 @@ import {
   TextInput,
   
 } from "react-native";
-import {Formik} from "formik"
 
-export function NewTripForm({ setModalVisible }) {
+export function NewTripForm({ setModalVisible, dropDownAlertRef }) {
     const [location, setLocation] = useState("");
     const [date, setDate] = useState("");
+
     const handleSubmit = () => {
 
+      const newTrip = {
+        location: location,
+        date: date,
+        plannedTrip: true,
+      };
+
+      if(location !== "" && date !== ""){
+        fetch("https://myfly-fishing-api.herokuapp.com", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(newTrip),
+        })
+          .then((response) => {
+            setLocation("");
+            setDate("");
+            dropDownAlertRef.alertWithType('success', 'Success', response.json());
+            setModalVisible(false);
+          })
+          .catch((err) => dropDownAlertRef.alertWithType('error', 'Error', err));
+        }
     }
+    
   return (
     <SafeAreaView style={styles.newTripContainer}>
         <Text style={styles.newTripHeader}>New Trip</Text>
@@ -24,13 +45,17 @@ export function NewTripForm({ setModalVisible }) {
         <TextInput 
         style={styles.textInput} 
         placeholder="Location"
+        value={location}
+        onChangeText={(text) => setLocation(text)}
         />
         <TextInput 
         style={styles.textInput} 
         placeholder="Date"
+        value={date}
+        onChangeText={(text) => setDate(text)}
         />
       </View>
-      <Pressable style={styles.submitButton}>
+      <Pressable style={styles.submitButton} onPress={() => handleSubmit()}>
         <Text>Submit</Text>
       </Pressable>
       <Button

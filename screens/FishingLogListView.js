@@ -3,16 +3,14 @@ import {StyleSheet, View, Text, FlatList, Pressable} from "react-native";
 import {DetailCard} from '../components/DetailCard';
 
 export function FishingLogListView({navigation}) {
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        // refreshing={true}
-        // onRefresh={()=>this.forceUpdate()}
+  const [listToggle, setListToggle] = useState(false);
+  const [buttonTitle, setButtonTitle] = useState('View Planned List');
+  const [fishingLogs, setFishingLogs] = useState(
+        <FlatList
         data={navigation.getParam("trips")}
         renderItem={({item}) => (
 
-                <DetailCard 
+                item?.plannedTrip === false && <DetailCard 
                 location={item.location}
                 img={item.img}
                 date={item.date}
@@ -20,7 +18,54 @@ export function FishingLogListView({navigation}) {
                 bait={item.bait}
                 />
         )}
-      />
+      />);
+
+    const toggle = () => {
+      if(!listToggle){
+        setFishingLogs(
+        <FlatList
+          data={navigation.getParam("trips")}
+          renderItem={({item}) => (
+  
+                  item?.plannedTrip === false && <DetailCard 
+                  location={item.location}
+                  img={item.img}
+                  date={item.date}
+                  fish={item.fish}
+                  bait={item.bait}
+                  />
+          )}
+        />)
+        setButtonTitle('View Planned List');
+
+        } else {
+          setFishingLogs(
+          <FlatList
+          data={navigation.getParam("trips")}
+          renderItem={({item}) => (
+  
+                  item?.plannedTrip === true && <DetailCard 
+                  location={item.location}
+                  img={item.img}
+                  date={item.date}
+                  fish={item.fish}
+                  bait={item.bait}
+                  plannedTrip={item.plannedTrip}
+                  />
+          )}
+          />)
+
+          setButtonTitle('View Fishing Logs');
+        }
+        setListToggle(!listToggle);
+      }
+
+  return (
+    <View>
+      <Pressable onPress={toggle}>
+        <Text style={styles.toggleButton}>{buttonTitle}</Text>
+      </Pressable>
+      {fishingLogs}
     </View>
   );
 }
@@ -32,5 +77,14 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: (20, 10, 10, 10),
     opacity: 67,
-  }
+  },
+  toggleButton: {
+    color: "#fff",
+    backgroundColor: "#7B61FF",
+    fontSize: 20,
+    textAlign: "center",
+    borderRadius: 20,
+    padding: 10,
+    margin: 10,
+  },
 })
