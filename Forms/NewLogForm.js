@@ -115,10 +115,14 @@ export default function NewLogForm({ navigation }) {
                     {fishlist.length > 0 &&
                       fishlist.map((item, index) => {
                         return (
-                          <Text key={index}>
-                            {"\n"}
-                            {item.species} - {item.length}"
-                          </Text>
+                          <View key={index} style={styles.formListItem}>
+                            <Text key={index}>
+                              {item.species} - {item.length}"
+                            </Text>
+                            <Button title="Remove" onPress={() => {
+                              setFishlist(fishlist.filter(fish => fish !== item));
+                            } }/>
+                          </View>
                         );
                       })}
                   </View>
@@ -145,8 +149,13 @@ export default function NewLogForm({ navigation }) {
                 <View style={styles.formGroup}>
                   <Text style={styles.smallHeader}>{"\n"}Add your bait</Text>
                   {baitList.length > 0 &&
-                    baitList.map((item) => {
-                      return <Text>{item}</Text>;
+                    baitList.map((item, index) => {
+                      return  (<View key={index} style={styles.formListItem}>
+                          <Text>{item}</Text>
+                          <Button title="Remove" onPress={() => {
+                            setBaitList(baitList.filter(bait => bait !== item));
+                          } }/>
+                        </View>)
                     })}
                   <TextInput
                     style={styles.textInput}
@@ -226,5 +235,16 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "#fff",
+  },
+  formListItem: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+    padding: 5,
+    paddingLeft: 20,
+    backgroundColor: "#f1f1f1",
+    borderRadius: 20,
   },
 });
