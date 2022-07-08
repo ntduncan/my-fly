@@ -10,7 +10,7 @@ import {
   
 } from "react-native";
 
-export function NewTripForm({ setModalVisible, dropDownAlertRef }) {
+export function NewTripForm({ setModalVisible, dropDownAlertRef}) {
     const [location, setLocation] = useState("");
     const [date, setDate] = useState("");
 

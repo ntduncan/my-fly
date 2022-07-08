@@ -1,71 +1,82 @@
-import React, {useState, useEffect} from "react";
-import {StyleSheet, View, Text, FlatList, Pressable} from "react-native";
-import {DetailCard} from '../components/DetailCard';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, FlatList, Pressable } from "react-native";
+import { DetailCard } from "../components/DetailCard";
+import { NewLogForm } from "../Forms/NewLogForm";
 
-export function FishingLogListView({navigation}) {
+export function FishingLogListView({ navigation }) {
   const [listToggle, setListToggle] = useState(false);
-  const [buttonTitle, setButtonTitle] = useState('View Planned List');
+  const [buttonTitle, setButtonTitle] = useState("View Planned List");
   const [fishingLogs, setFishingLogs] = useState(
-        <FlatList
-        data={navigation.getParam("trips")}
-        renderItem={({item}) => (
+    <FlatList
+      data={navigation.getParam("trips")}
+      renderItem={({ item }) =>
+        item?.plannedTrip === false && (
+          <DetailCard
+            location={item.location}
+            img={item.img}
+            date={item.date}
+            fish={item.fish}
+            bait={item.bait}
+          />
+        )
+      }
+    />
+  );
 
-                item?.plannedTrip === false && <DetailCard 
+  const toggle = () => {
+    if (!listToggle) {
+      setFishingLogs(
+        <FlatList
+          data={navigation.getParam("trips")}
+          renderItem={({ item }) =>
+            item?.plannedTrip === false && (
+              <DetailCard
                 location={item.location}
                 img={item.img}
                 date={item.date}
                 fish={item.fish}
                 bait={item.bait}
-                />
-        )}
-      />);
-
-    const toggle = () => {
-      if(!listToggle){
-        setFishingLogs(
+                plannedTrip={item.plannedTrip}
+              />
+            )
+          }
+        />
+      );
+      setButtonTitle("View Planned List");
+    } else {
+      setFishingLogs(
         <FlatList
-          data={navigation.getParam("trips")}
-          renderItem={({item}) => (
-  
-                  item?.plannedTrip === false && <DetailCard 
-                  location={item.location}
-                  img={item.img}
-                  date={item.date}
-                  fish={item.fish}
-                  bait={item.bait}
-                  plannedTrip={item.plannedTrip}
-                  />
-          )}
-        />)
-        setButtonTitle('View Planned List');
-
-        } else {
-          setFishingLogs(
-          <FlatList
           data={navigation.getParam("plannedTrips")}
-          renderItem={({item}) => (
-  
-                  item?.plannedTrip === true && <DetailCard 
-                  location={item.location}
-                  img={item.img}
-                  date={item.date}
-                  fish={item.fish}
-                  bait={item.bait}
-                  plannedTrip={item.plannedTrip}
-                  />
-          )}
-          />)
+          renderItem={({ item }) =>
+            item?.plannedTrip === true && (
+              <DetailCard
+                location={item.location}
+                img={item.img}
+                date={item.date}
+                fish={item.fish}
+                bait={item.bait}
+                plannedTrip={item.plannedTrip}
+              />
+            )
+          }
+        />
+      );
 
-          setButtonTitle('View Fishing Logs');
-        }
-        setListToggle(!listToggle);
-      }
+      setButtonTitle("View Fishing Logs");
+    }
+    setListToggle(!listToggle);
+  };
 
   return (
     <View>
-      <Pressable onPress={toggle}>
-        <Text style={styles.toggleButton}>{buttonTitle}</Text>
-      </Pressable>
+      <View>
+        <Pressable>
+          <Text style={[styles.toggleButton, styles.addButton,]}>Add New Log</Text>
+        </Pressable>
+        <Pressable onPress={toggle}>
+          <Text style={styles.toggleButton}>{buttonTitle}</Text>
+        </Pressable>
+      </View>
       {fishingLogs}
     </View>
   );
@@ -88,4 +99,14 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
   },
-})
+  addButton: {
+    color: "#333",
+    backgroundColor: "#D4D4D4",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+  },
+});

@@ -7,19 +7,17 @@ import {
   Modal,
   SafeAreaView,
 } from "react-native";
-import DropdownAlert from 'react-native-dropdownalert';
 import { useState, useEffect, useRef } from "react";
 import { LargeCard } from "../components/LargeCard";
 import { NewTripForm } from "../Forms/NewTripForm";
+import DropdownAlert from 'react-native-dropdownalert';
 
-export function Dashboard({ navigation }) {
+export function Dashboard({ navigation, dropDownAlertRef }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [trips, setTrips] = useState();
   const [nextTrips, setNextTrips] = useState([]);
   const [nextTrip, setNextTrip] = useState();
   const [lastTrip, setLastTrip] = useState();
-  const loadingWheel = 0;
-  let dropDownAlertRef = useRef();
 
   //Set Trips on Initial Render
 useEffect(() => {
@@ -28,24 +26,28 @@ useEffect(() => {
       return response.json();
     })
     .then((data) => {
-      
-      setTrips(data.filter((trip) => !trip?.plannedTrip));
       setNextTrips(data.filter((trip) => trip?.plannedTrip));
+      setTrips(data.filter((trip) => !trip?.plannedTrip));
       dropDownAlertRef.alertWithType('success', 'Success', 'Trips Loaded');
 
-      var ndate = new Date(nextTrips[0].date);
-      ndate = ndate.toDateString().split(" ");
-      setNextTrip(`${ndate[1]} ${ndate[2]}`);
-
-      var ldate = new Date(trips[0].date);
-      ldate = ldate.toDateString().split(" ");
-      setLastTrip(`${ldate[1]} ${ldate[2]}`);
+    })
+    .then(() => {
+      setTimeout(() => {
+        var ndate = new Date(nextTrips[0]?.date);
+        ndate = ndate.toDateString().split(" ");
+        setNextTrip(`${ndate[1]} ${ndate[2]}`);
+    
+        var ldate = new Date(trips[0]?.date);
+        ldate = ldate.toDateString().split(" ");
+        setLastTrip(`${ldate[1]} ${ldate[2]}`);
+      }, 2000);
     })
     .catch((err) => {
       console.log(err);
     });
 
-  }, [navigation.navigate]);
+  }, []);
+
 
   const getTotalFish = () => {
     if (trips?.length > 0) {
@@ -59,13 +61,6 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
-      <DropdownAlert
-        ref={(ref) => {
-          if (ref) {
-            dropDownAlertRef = ref;
-          }
-        }}
-      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -79,13 +74,22 @@ useEffect(() => {
       </Modal>
 
       <Text style={styles.headerText}>MyFly Dashboard</Text>
+      <DropdownAlert
+        ref={(ref) => {
+          if (ref) {
+            dropDownAlertRef = ref;
+          }
+        }}
+      />
 
       <View style={styles.dashboardBody}>
         <View style={styles.main}>
           <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips})}>
             <LargeCard title="Total Trips" content={trips?.length} />
           </Pressable>
-          <LargeCard title="Total Fish" content={getTotalFish()} />
+          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips})}>
+            <LargeCard title="Total Fish" content={getTotalFish()} />
+          </Pressable>
           <LargeCard title="Next Trip" content={nextTrip} />  
           <LargeCard title="Last Trip" content={lastTrip} />
 

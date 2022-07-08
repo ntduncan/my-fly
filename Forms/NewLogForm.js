@@ -16,7 +16,7 @@ import { Formik } from "formik";
 import {CameraRoll} from "@react-native-community/cameraroll";
 // import * as Yup from "yup";
 
-export default function NewLogForm({ navigation }) {
+export default function NewLogForm({ navigation, fishLog  }) {
   //State for the modal
   const [baitList, setBaitList] = useState([]);
   const [fishlist, setFishlist] = useState([]);

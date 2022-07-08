@@ -1,16 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button, Pressable, Modal, SafeAreaView } from "react-native";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import  Dashboard  from './screens/Dashboard';
 import Navigator from "./routes/homeStack";
+import DropdownAlert from 'react-native-dropdownalert';
 
 export default function App() {
 
-  
+  let dropDownAlertRef = useRef();
 
   return (
     <SafeAreaView style={styles.container}>
-      <Navigator />
+
+      <Navigator dropDownAlertRef={dropDownAlertRef}/>
     </SafeAreaView>
   );
 }
