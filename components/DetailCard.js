@@ -19,7 +19,7 @@ export function DetailCard({ location, fish, img, bait, date, plannedTrip }) {
         setCatchHidden(!catchHidden);
       }}
     >
-      <View style={[styles.detailCardContainer, plannedTrip?styles.smallPaddig:null]}>
+      <View style={[styles.detailCardContainer, plannedTrip]}>
         <View style={styles.mainContent}>
           {!plannedTrip && imgProvided && <Image
             source={{
@@ -67,6 +67,7 @@ export function DetailCard({ location, fish, img, bait, date, plannedTrip }) {
             </View>
           </View>
         )}
+        
       </View>
     </Pressable>
   );

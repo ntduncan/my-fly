@@ -26,27 +26,17 @@ useEffect(() => {
       return response.json();
     })
     .then((data) => {
-      setNextTrips(data.filter((trip) => trip?.plannedTrip));
-      setTrips(data.filter((trip) => !trip?.plannedTrip));
       dropDownAlertRef.alertWithType('success', 'Success', 'Trips Loaded');
 
-    })
-    .then(() => {
-      setTimeout(() => {
-        var ndate = new Date(nextTrips[0]?.date);
-        ndate = ndate.toDateString().split(" ");
-        setNextTrip(`${ndate[1]} ${ndate[2]}`);
-    
-        var ldate = new Date(trips[0]?.date);
-        ldate = ldate.toDateString().split(" ");
-        setLastTrip(`${ldate[1]} ${ldate[2]}`);
-      }, 2000);
-    })
-    .catch((err) => {
-      console.log(err);
+      setNextTrips(data.filter((trip) => trip?.plannedTrip));
+      setTrips(data.filter((trip) => !trip?.plannedTrip));
+      
+    }).catch((error) => {
+      console.log(error);
     });
+    
 
-  }, []);
+  }, [navigation.navigate]);
 
 
   const getTotalFish = () => {
@@ -58,6 +48,22 @@ useEffect(() => {
       return count;
     }
   };
+
+  const getNextTripDate = () => {
+    if (nextTrips?.length > 0) {      
+      var ndate = new Date(nextTrips[0]?.date);
+      ndate = ndate.toDateString().split(" ");
+      return`${ndate[1]} ${ndate[2]}`;
+    } 
+  }
+
+  const getLastTripDate = () => {
+    if (trips?.length > 0) {
+      var ldate = new Date(trips[0]?.date);
+      ldate = ldate.toDateString().split(" ");
+      return`${ldate[1]} ${ldate[2]}`;
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -90,8 +96,8 @@ useEffect(() => {
           <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips})}>
             <LargeCard title="Total Fish" content={getTotalFish()} />
           </Pressable>
-          <LargeCard title="Next Trip" content={nextTrip} />  
-          <LargeCard title="Last Trip" content={lastTrip} />
+          <LargeCard title="Next Trip" content={getNextTripDate()} />  
+          <LargeCard title="Last Trip" content={getLastTripDate()} />
 
           <Pressable onPress={() => navigation.navigate("AddNewLogView")}>
             <View style={styles.footer}>
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 360,
     padding: 10,
-    marginBottom: 30,
+    marginBottom: 10,
   },
 
     textLight: {

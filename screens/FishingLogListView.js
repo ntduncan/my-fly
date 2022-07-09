@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     opacity: 67,
   },
   toggleButton: {
-    color: "#fff",
-    backgroundColor: "#7B61FF",
+    color: "#333",
+    backgroundColor: "#D4D4D4",
     fontSize: 20,
     textAlign: "center",
     borderRadius: 20,
@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   addButton: {
-    color: "#333",
-    backgroundColor: "#D4D4D4",
+    color: "#fff",
+    backgroundColor: "#7B61FF",
   },
   buttonContainer: {
     flexDirection: "row",
