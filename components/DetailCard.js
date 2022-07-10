@@ -95,7 +95,7 @@ export function DetailCard({
               </View>
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Edit" onClick={setIsEditing(true)} />
+              <Button title="Edit" onClick={() => setIsEditing(true)} />
               <Button title="Delete" onClick={() => {}} />
             </View>
           </View>
