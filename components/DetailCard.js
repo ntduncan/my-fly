@@ -7,11 +7,32 @@ import {
   Pressable,
   FlatList,
   SectionList,
+  Button,
 } from "react-native";
 
-export function DetailCard({ location, fish, img, bait, date, plannedTrip }) {
+export function DetailCard({
+  location,
+  fish,
+  img,
+  bait,
+  date,
+  plannedTrip,
+  setEditItem,
+  setIsEditing,
+}) {
   const [catchHidden, setCatchHidden] = useState(false);
-  const [imgProvided, setImgProvided] = useState(img !== "Image" ? true : false);
+  const [imgProvided, setImgProvided] = useState(
+    img !== "Image" ? true : false
+  );
+
+  setEditItem({
+    location: location,
+    date: date,
+    img: img,
+    bait: bait,
+    fish: fish,
+    plannedTrip: plannedTrip,
+  });
 
   return (
     <Pressable
@@ -21,53 +42,64 @@ export function DetailCard({ location, fish, img, bait, date, plannedTrip }) {
     >
       <View style={[styles.detailCardContainer, plannedTrip]}>
         <View style={styles.mainContent}>
-          {!plannedTrip && imgProvided && <Image
-            source={{
-              uri: img ,
-            }}
-            style={styles.image}
-          />}
-          {!imgProvided && <Image 
-          source={require("../assets/images/noImage.png")}
-          style={styles.image}
-          />}
+          {!plannedTrip && imgProvided && (
+            <Image
+              source={{
+                uri: img,
+              }}
+              style={styles.image}
+            />
+          )}
+          {!imgProvided && (
+            <Image
+              source={require("../assets/images/noImage.png")}
+              style={styles.image}
+            />
+          )}
 
           <View style={styles.cardCenter}>
             <Text style={styles.headerText}>{location}</Text>
             <Text style={[styles.headerText, styles.lightText]}>{date}</Text>
           </View>
-          {!plannedTrip && <View>
-            <Text style={styles.quantity}>{fish.length}</Text>
-          </View>}
-        </View>
-        {catchHidden && !plannedTrip &&  (
-          <View style={styles.catchData}>
+          {!plannedTrip && (
             <View>
-              <Text style={[styles.headerText, styles.lightText]}>Fish:</Text>
-              <FlatList
-                data={fish}
-                keyExtractor={(item, index) => item + index}
-                renderItem={({ item }) => (
-                  <Text style={styles.bodyText}>
-                    {item.species} - {item.length}"
-                  </Text>
-                )}
-              />
+              <Text style={styles.quantity}>{fish.length}</Text>
             </View>
+          )}
+        </View>
+        {catchHidden && !plannedTrip && (
+          <View>
+            <View style={styles.catchData}>
+              <View>
+                <Text style={[styles.headerText, styles.lightText]}>Fish:</Text>
+                <FlatList
+                  data={fish}
+                  keyExtractor={(item, index) => item + index}
+                  renderItem={({ item }) => (
+                    <Text style={styles.bodyText}>
+                      {item.species} - {item.length}"
+                    </Text>
+                  )}
+                />
+              </View>
 
-            <View>
-              <Text style={[styles.headerText, styles.lightText]}>Bait:</Text>
-              <FlatList
-                data={bait}
-                keyExtractor={(item, index) => item + index}
-                renderItem={({ item }) => (
-                  <Text style={styles.bodyText}>{item},</Text>
-                )}
-              />
+              <View>
+                <Text style={[styles.headerText, styles.lightText]}>Bait:</Text>
+                <FlatList
+                  data={bait}
+                  keyExtractor={(item, index) => item + index}
+                  renderItem={({ item }) => (
+                    <Text style={styles.bodyText}>{item},</Text>
+                  )}
+                />
+              </View>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button title="Edit" onClick={setIsEditing(true)} />
+              <Button title="Delete" onClick={() => {}} />
             </View>
           </View>
         )}
-        
       </View>
     </Pressable>
   );
@@ -83,7 +115,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#E0E9F6",
     margin: 10,
     borderRadius: 20,
-    
   },
   mainContent: {
     display: "flex",
@@ -128,5 +159,11 @@ const styles = StyleSheet.create({
   },
   smallPaddig: {
     padding: 10,
-  }
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
 });

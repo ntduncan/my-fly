@@ -10,8 +10,9 @@ import {
   Platform,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
-  ScrollView,
+  
 } from "react-native";
+import {ScrollView } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import {CameraRoll} from "@react-native-community/cameraroll";
 // import * as Yup from "yup";
@@ -50,6 +51,7 @@ export default function NewLogForm({ navigation, fishLog  }) {
       }}
     >
       <View style={styles.inner}>
+        <ScrollView>
       <Text style={styles.pageTitle}>Add New Fishing Log</Text>
         <Formik
           initialValues={{
@@ -177,6 +179,7 @@ export default function NewLogForm({ navigation, fishLog  }) {
             );
           }}
         </Formik>
+        </ScrollView>
       </View>
     </TouchableWithoutFeedback>
     // </KeyboardAvoidingView>

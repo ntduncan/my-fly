@@ -5,7 +5,6 @@ import {
   Button,
   Pressable,
   Modal,
-  SafeAreaView,
 } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import { LargeCard } from "../components/LargeCard";
@@ -16,8 +15,7 @@ export function Dashboard({ navigation, dropDownAlertRef }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [trips, setTrips] = useState();
   const [nextTrips, setNextTrips] = useState([]);
-  const [nextTrip, setNextTrip] = useState();
-  const [lastTrip, setLastTrip] = useState();
+  const [updated, setUpdated] = useState(true);
 
   //Set Trips on Initial Render
 useEffect(() => {
@@ -36,7 +34,7 @@ useEffect(() => {
     });
     
 
-  }, [navigation.navigate]);
+  }, [navigation.navigate, updated]);
 
 
   const getTotalFish = () => {
@@ -90,10 +88,10 @@ useEffect(() => {
 
       <View style={styles.dashboardBody}>
         <View style={styles.main}>
-          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips})}>
+          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips, setUpdated: setUpdated})}>
             <LargeCard title="Total Trips" content={trips?.length} />
           </Pressable>
-          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips})}>
+          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips, setUpdated: setUpdated})}>
             <LargeCard title="Total Fish" content={getTotalFish()} />
           </Pressable>
           <LargeCard title="Next Trip" content={getNextTripDate()} />  

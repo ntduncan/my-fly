@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, FlatList, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  Modal,
+} from "react-native";
 import { DetailCard } from "../components/DetailCard";
 import { NewLogForm } from "../Forms/NewLogForm";
+import { ScrollView } from "react-native-gesture-handler";
+import EditLogForm from "../Forms/EditLogForm";
 
 export function FishingLogListView({ navigation }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editItem, setEditItem] = useState({});
   const [listToggle, setListToggle] = useState(false);
   const [buttonTitle, setButtonTitle] = useState("View Planned List");
+
   const [fishingLogs, setFishingLogs] = useState(
     <FlatList
       data={navigation.getParam("trips")}
@@ -17,6 +29,8 @@ export function FishingLogListView({ navigation }) {
             date={item.date}
             fish={item.fish}
             bait={item.bait}
+            setEditItem={setEditItem}
+            setIsEditing={setIsEditing}
           />
         )
       }
@@ -37,6 +51,8 @@ export function FishingLogListView({ navigation }) {
                 fish={item.fish}
                 bait={item.bait}
                 plannedTrip={item.plannedTrip}
+                setEditItem={setEditItem}
+                setIsEditing={setIsEditing}
               />
             )
           }
@@ -56,6 +72,8 @@ export function FishingLogListView({ navigation }) {
                 fish={item.fish}
                 bait={item.bait}
                 plannedTrip={item.plannedTrip}
+                setEditItem={setEditItem}
+                setIsEditing={setIsEditing}
               />
             )
           }
@@ -69,15 +87,31 @@ export function FishingLogListView({ navigation }) {
 
   return (
     <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isEditing}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setIsEditing(false);
+        }}
+      >
+        <ScrollView>
+          <EditLogForm setIsEditing={setIsEditing} fishLog={editItem} setUpdated={navigation.getParam("setUpdated")} />
+        </ScrollView>
+      </Modal>
+
       <View>
         <Pressable>
-          <Text style={[styles.toggleButton, styles.addButton,]}>Add New Log</Text>
+          <Text style={[styles.toggleButton, styles.addButton]}>
+            Add New Log
+          </Text>
         </Pressable>
         <Pressable onPress={toggle}>
           <Text style={styles.toggleButton}>{buttonTitle}</Text>
         </Pressable>
       </View>
-      {fishingLogs}
+      <View>{fishingLogs}</View>
     </View>
   );
 }
