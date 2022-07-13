@@ -133,10 +133,7 @@ export default function NewLogForm({ navigation, fishLog  }) {
                     placeholder="Species"
                     autoCapitalize="words"
                     value={species}
-                    onChangeText={(text) => {
-                      setSpecies(text);
-                      console.log(species);
-                    }}
+                    onChangeText={(text) => { setSpecies(text);}}
                   />
                   <TextInput
                     style={styles.textInput}

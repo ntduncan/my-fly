@@ -95,16 +95,16 @@ export function FishingLogListView({ navigation }) {
         visible={isEditing}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          // setIsEditing(false);
+          setIsEditing(false);
         }}
       >
-        <View>
+        <ScrollView>
           <EditLogForm
             setIsEditing={setIsEditing}
             fishLog={editItem}
             setUpdated={navigation.getParam("setUpdated")}
           />
-        </View>
+        </ScrollView>
       </Modal>
       
         <View>
@@ -117,7 +117,10 @@ export function FishingLogListView({ navigation }) {
             <Text style={styles.toggleButton}>{buttonTitle}</Text>
           </Pressable>
         </View>
-        <ScrollView>{fishingLogs}</ScrollView>
+        <ScrollView>
+          {fishingLogs}
+          <View style={styles.buffer}></View>
+        </ScrollView>
       
     </View>
   );
@@ -151,7 +154,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 10,
   },
-  listView: {
-    height: 300,
+  // listView: {
+  //   height: 300,
+  // },
+  buffer: {
+    height: 120,
   },
 });

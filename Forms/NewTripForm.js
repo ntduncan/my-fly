@@ -71,11 +71,11 @@ export function NewTripForm({ setModalVisible, dropDownAlertRef}) {
 
 const styles = StyleSheet.create({
   newTripContainer: {
-      display: "flex",
-      flex: 1,
-      flexDirection: "column",
-    //   justifyContent: "center",
-      alignItems: "center",
+    display: "flex",
+    flex: 1,
+    flexDirection: "column",
+  //   justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#7B61FF",
     margin: 20,
     marginTop: 140,

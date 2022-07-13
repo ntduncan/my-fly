@@ -22,15 +22,6 @@ export function DetailCard({
     trip.img !== "Image" ? true : false
   );
 
-  setEditItem({
-    location: trip.location,
-    date: trip.date,
-    img: trip.img,
-    bait: trip.bait,
-    fish: trip.fish,
-    plannedTrip: trip.plannedTrip === true ? true : false,
-  });
-
   return (
     <Pressable
       onPress={() => {
@@ -70,7 +61,6 @@ export function DetailCard({
           <View>
             <View style={styles.catchData}>
               <View>
-                <Text>{trip.id}</Text>
                 <Text style={[styles.headerText, styles.lightText]}>Fish:</Text>
                 <FlatList
                   data={trip.fish}
@@ -80,7 +70,7 @@ export function DetailCard({
                       {item.species} - {item.length}"
                     </Text>
                   )}
-      
+                  listKey="fishList"
                 />
               </View>
 
@@ -97,8 +87,18 @@ export function DetailCard({
               </View>
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Edit" onClick={() => {setIsEditing(true)}} />
-              <Button title="Delete" onClick={() => handleDeleteRequest(trip["_id"])} />
+              <Button title="Edit" onPress={() => {
+                setIsEditing(true)
+                setEditItem({
+                  location: trip.location,
+                  date: trip.date,
+                  img: trip.img,
+                  bait: trip.bait,
+                  fish: trip.fish,
+                  plannedTrip: trip.plannedTrip === true ? true : false,
+                });
+              }} />
+              <Button title="Delete" onPress={() => handleDeleteRequest(trip["_id"])} />
             </View>
           </View>
         )}

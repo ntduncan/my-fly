@@ -34,7 +34,7 @@ useEffect(() => {
     });
     
 
-  }, [navigation.navigate]);
+  }, [updated]);
 
 
   const getTotalFish = () => {

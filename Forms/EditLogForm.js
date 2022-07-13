@@ -7,14 +7,10 @@ import {
   Text,
   TextInput,
   Keyboard,
-  Platform,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  ScrollView,
   SafeAreaView,
 } from "react-native";
 import { Formik } from "formik";
-// import * as Yup from "yup";
 
 export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
   //State for the modal
@@ -26,9 +22,8 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
 
   const addFish = (e) => {
     e.preventDefault();
-
     const fish = { species: species, length: length ? length : "-" };
-    if (fish.species !== "") {
+    if (fish.species !== "" && fish.species !== "") {
       setFishlist([...fishlist, fish]);
       setSpecies("");
       setLength("");
@@ -37,9 +32,10 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
 
   const addBait = (e) => {
     e.preventDefault();
-    //add bait to list
+    if(bait !== "" && bait !== " "){
     setBaitList([...baitList, bait]);
     setBait("");
+    }
   };
 
   return (
@@ -50,13 +46,13 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
         }}
       >
         <View style={styles.inner}>
-          <Text style={styles.pageTitle}>Add New Fishing Log</Text>
+          <Text style={styles.pageTitle}>Edit Fishing Log</Text>
           <Formik
             initialValues={{
               location: "Location",
               date: "Date",
               img: "Image",
-              // bait: ["Bait"],
+              
             }}
             onSubmit={(values) => {
               const fishingLog = {
@@ -74,15 +70,15 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(fishingLog),
               })
-                .then(() => {
-                  setFishlist([]);
-                  setBaitList([]);
-                  setSpecies("");
-                  setLength("");
-                  setBait("");
-                  setUpdate(true);
-                })
-                .catch((err) => console.log(err));
+              .then(() => {
+                setFishlist([]);
+                setBaitList([]);
+                setSpecies("");
+                setLength("");
+                setBait("");
+                setUpdated(true);
+              })
+              .catch((err) => console.log(err));
 
               setIsEditing(false);
             }}
@@ -118,7 +114,7 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
                   <View style={styles.formGroup}>
                     <Text style={styles.smallHeader}>{"\n"}Add a fish</Text>
                     <View>
-                      {fishlist.length > 0 &&
+                      {fishlist?.length > 0 &&
                         fishlist.map((item, index) => {
                           return (
                             <View key={index} style={styles.formListItem}>
@@ -142,10 +138,7 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
                       placeholder="Species"
                       autoCapitalize="words"
                       value={species}
-                      onChangeText={(text) => {
-                        setSpecies(text);
-                        console.log(species);
-                      }}
+                      onChangeText={(text) => {setSpecies(text);}}
                     />
                     <TextInput
                       style={styles.textInput}
@@ -159,7 +152,7 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
 
                   <View style={styles.formGroup}>
                     <Text style={styles.smallHeader}>{"\n"}Add your bait</Text>
-                    {baitList.length > 0 &&
+                    {baitList?.length > 0 &&
                       baitList.map((item, index) => {
                         return (
                           <View key={index} style={styles.formListItem}>
@@ -183,25 +176,28 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
                     />
                     <Button title="Add Bait" onPress={addBait} />
                   </View>
-                  <Pressable
-                    style={styles.submitButton}
-                    onPress={() => {
-                      props.handleSubmit();
-                    }}
-                  >
-                    <Text>Submit</Text>
-                  </Pressable>
-                  <Pressable
-                    style={styles.submitButton}
-                    onPress={() => {
-                      setIsEditing(false);
-                    }}
-                  >
-                    <Text>Cancel</Text>
-                  </Pressable>
+                  <View style={styles.ButtonGroup}>
+                    <Pressable
+                      style={styles.submitButton}
+                      onPress={() => {
+                        props.handleSubmit();
+                      }}
+                    >
+                      <Text>Submit</Text>
+                    </Pressable>
+                    <Pressable
+                      style={styles.submitButton}
+                      onPress={() => {
+                        setIsEditing(false);
+                      }}
+                    >
+                      <Text>Cancel</Text>
+                    </Pressable>
+                  </View>
                 </View>
               );
             }}
+            
           </Formik>
         </View>
       </TouchableWithoutFeedback>
@@ -274,7 +270,7 @@ const styles = StyleSheet.create({
   },
   newTripContainer: {
     display: "flex",
-    flex: 1,
+    // flex: 1,
     flexDirection: "column",
     //   justifyContent: "center",
     alignItems: "center",
@@ -284,5 +280,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: "80%",
     padding: 20,
+    paddingBottom: 40,
   },
+  ButtonGroup: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }
 });
