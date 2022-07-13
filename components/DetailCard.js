@@ -38,6 +38,7 @@ export function DetailCard({
       }}
     >
       <View style={[styles.detailCardContainer,]}>
+
         <View style={styles.mainContent}>
           {!trip?.plannedTrip && imgProvided && (
             <Image
@@ -64,6 +65,7 @@ export function DetailCard({
             </View>
           )}
         </View>
+
         {catchHidden && !trip?.plannedTrip && (
           <View>
             <View style={styles.catchData}>
@@ -78,6 +80,7 @@ export function DetailCard({
                       {item.species} - {item.length}"
                     </Text>
                   )}
+      
                 />
               </View>
 
@@ -89,12 +92,13 @@ export function DetailCard({
                   renderItem={({ item }) => (
                     <Text style={styles.bodyText}>{item},</Text>
                   )}
+                  listKey={"fishBait"}
                 />
               </View>
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Edit" onClick={() => setIsEditing(true)} />
-              <Button title="Delete" onClick={() => { handleDeleteRequest(); }} />
+              <Button title="Edit" onClick={() => {setIsEditing(true)}} />
+              <Button title="Delete" onClick={() => handleDeleteRequest(trip["_id"])} />
             </View>
           </View>
         )}

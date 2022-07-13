@@ -83,7 +83,7 @@ export default function NewLogForm({ navigation, fishLog  }) {
               })
               .catch((err) => console.log(err));
 
-            navigation.navigate("Dashboard"); //TODO: navigate to dashboard
+            navigation.goBack(); //TODO: navigate to dashboard
           }}
         >
           {(props) => {

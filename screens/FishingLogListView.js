@@ -3,13 +3,12 @@ import {
   StyleSheet,
   View,
   Text,
-  FlatList,
   Pressable,
   Modal,
 } from "react-native";
 import { DetailCard } from "../components/DetailCard";
 import { NewLogForm } from "../Forms/NewLogForm";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, FlatList } from "react-native-gesture-handler";
 import EditLogForm from "../Forms/EditLogForm";
 
 export function FishingLogListView({ navigation }) {
@@ -24,20 +23,16 @@ export function FishingLogListView({ navigation }) {
     }).catch((error) => {
       console.log(error);
     });
-    console.log("Deleted");
+    navigation.navigate("Dashboard");
   };
 
   const [fishingLogs, setFishingLogs] = useState(
     <FlatList
       data={navigation.getParam("trips")}
+      keyExtractor={(item, index) => item + index}
       renderItem={({ item }) =>
         item?.plannedTrip === false && (
           <DetailCard
-            // location={item.location}
-            // img={item.img}
-            // date={item.date}
-            // fish={item.fish}
-            // bait={item.bait}
             trip={item}
             setEditItem={setEditItem}
             setIsEditing={setIsEditing}
@@ -45,6 +40,7 @@ export function FishingLogListView({ navigation }) {
           />
         )
       }
+      listKey={(item, index) => item + index}
     />
   );
 
@@ -53,15 +49,10 @@ export function FishingLogListView({ navigation }) {
       setFishingLogs(
         <FlatList
           data={navigation.getParam("trips")}
+          keyExtractor={(item, index) => item + index}
           renderItem={({ item }) =>
             item?.plannedTrip === false && (
               <DetailCard
-                // location={item.location}
-                // img={item.img}
-                // date={item.date}
-                // fish={item.fish}
-                // bait={item.bait}
-                plannedTrip={item.plannedTrip}
                 trip={item}
                 setEditItem={setEditItem}
                 setIsEditing={setIsEditing}
@@ -69,6 +60,7 @@ export function FishingLogListView({ navigation }) {
               />
             )
           }
+          listKey={(item, index) => item + index}
         />
       );
       setButtonTitle("View Planned List");
@@ -77,21 +69,16 @@ export function FishingLogListView({ navigation }) {
         <FlatList
           data={navigation.getParam("plannedTrips")}
           renderItem={({ item }) =>
-            item?.plannedTrip === true && (
-              <DetailCard
-                // location={item.location}
-                // img={item.img}
-                // date={item.date}
-                // fish={item.fish}
-                // bait={item.bait}
-                plannedTrip={item.plannedTrip}
-                trip={item}
-                setEditItem={setEditItem}
-                setIsEditing={setIsEditing}
-                handleDeleteRequest={handleDeleteRequest}
-              />
+          item?.plannedTrip === true && (
+            <DetailCard
+            trip={item}
+            setEditItem={setEditItem}
+            setIsEditing={setIsEditing}
+            handleDeleteRequest={handleDeleteRequest}
+            />
             )
           }
+          listKey={(item, index) => item + index}
         />
       );
 
@@ -108,20 +95,20 @@ export function FishingLogListView({ navigation }) {
         visible={isEditing}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          setIsEditing(false);
+          // setIsEditing(false);
         }}
       >
-        <ScrollView>
+        <View>
           <EditLogForm
             setIsEditing={setIsEditing}
             fishLog={editItem}
             setUpdated={navigation.getParam("setUpdated")}
           />
-        </ScrollView>
+        </View>
       </Modal>
       
         <View>
-          <Pressable onPress={navigation.goBack()}>
+          <Pressable onPress={() => {navigation.navigate("AddNewLogView")}}>
             <Text style={[styles.toggleButton, styles.addButton]}>
               Add New Log
             </Text>
