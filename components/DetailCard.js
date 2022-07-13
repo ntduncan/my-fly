@@ -10,28 +10,25 @@ import {
   Button,
 } from "react-native";
 
+
 export function DetailCard({
-  location,
-  fish,
-  img,
-  bait,
-  date,
-  plannedTrip,
+  trip,
   setEditItem,
   setIsEditing,
+  handleDeleteRequest,
 }) {
   const [catchHidden, setCatchHidden] = useState(false);
   const [imgProvided, setImgProvided] = useState(
-    img !== "Image" ? true : false
+    trip.img !== "Image" ? true : false
   );
 
   setEditItem({
-    location: location,
-    date: date,
-    img: img,
-    bait: bait,
-    fish: fish,
-    plannedTrip: plannedTrip,
+    location: trip.location,
+    date: trip.date,
+    img: trip.img,
+    bait: trip.bait,
+    fish: trip.fish,
+    plannedTrip: trip.plannedTrip === true ? true : false,
   });
 
   return (
@@ -40,12 +37,12 @@ export function DetailCard({
         setCatchHidden(!catchHidden);
       }}
     >
-      <View style={[styles.detailCardContainer, plannedTrip]}>
+      <View style={[styles.detailCardContainer,]}>
         <View style={styles.mainContent}>
-          {!plannedTrip && imgProvided && (
+          {!trip?.plannedTrip && imgProvided && (
             <Image
               source={{
-                uri: img,
+                uri: trip.img,
               }}
               style={styles.image}
             />
@@ -58,22 +55,23 @@ export function DetailCard({
           )}
 
           <View style={styles.cardCenter}>
-            <Text style={styles.headerText}>{location}</Text>
-            <Text style={[styles.headerText, styles.lightText]}>{date}</Text>
+            <Text style={styles.headerText}>{trip.location}</Text>
+            <Text style={[styles.headerText, styles.lightText]}>{trip.date}</Text>
           </View>
-          {!plannedTrip && (
+          {!trip?.plannedTrip && (
             <View>
-              <Text style={styles.quantity}>{fish.length}</Text>
+              <Text style={styles.quantity}>{trip.fish.length}</Text>
             </View>
           )}
         </View>
-        {catchHidden && !plannedTrip && (
+        {catchHidden && !trip?.plannedTrip && (
           <View>
             <View style={styles.catchData}>
               <View>
+                <Text>{trip.id}</Text>
                 <Text style={[styles.headerText, styles.lightText]}>Fish:</Text>
                 <FlatList
-                  data={fish}
+                  data={trip.fish}
                   keyExtractor={(item, index) => item + index}
                   renderItem={({ item }) => (
                     <Text style={styles.bodyText}>
@@ -86,7 +84,7 @@ export function DetailCard({
               <View>
                 <Text style={[styles.headerText, styles.lightText]}>Bait:</Text>
                 <FlatList
-                  data={bait}
+                  data={trip.bait}
                   keyExtractor={(item, index) => item + index}
                   renderItem={({ item }) => (
                     <Text style={styles.bodyText}>{item},</Text>
@@ -96,7 +94,7 @@ export function DetailCard({
             </View>
             <View style={styles.buttonContainer}>
               <Button title="Edit" onClick={() => setIsEditing(true)} />
-              <Button title="Delete" onClick={() => {}} />
+              <Button title="Delete" onClick={() => { handleDeleteRequest(); }} />
             </View>
           </View>
         )}

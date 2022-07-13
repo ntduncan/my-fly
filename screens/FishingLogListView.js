@@ -18,19 +18,30 @@ export function FishingLogListView({ navigation }) {
   const [listToggle, setListToggle] = useState(false);
   const [buttonTitle, setButtonTitle] = useState("View Planned List");
 
+  const handleDeleteRequest = (id) => {
+    fetch(`https://myfly-fishing-api.herokuapp.com/${id}`, {
+      method: "DELETE",
+    }).catch((error) => {
+      console.log(error);
+    });
+    console.log("Deleted");
+  };
+
   const [fishingLogs, setFishingLogs] = useState(
     <FlatList
       data={navigation.getParam("trips")}
       renderItem={({ item }) =>
         item?.plannedTrip === false && (
           <DetailCard
-            location={item.location}
-            img={item.img}
-            date={item.date}
-            fish={item.fish}
-            bait={item.bait}
+            // location={item.location}
+            // img={item.img}
+            // date={item.date}
+            // fish={item.fish}
+            // bait={item.bait}
+            trip={item}
             setEditItem={setEditItem}
             setIsEditing={setIsEditing}
+            handleDeleteRequest={handleDeleteRequest}
           />
         )
       }
@@ -45,14 +56,16 @@ export function FishingLogListView({ navigation }) {
           renderItem={({ item }) =>
             item?.plannedTrip === false && (
               <DetailCard
-                location={item.location}
-                img={item.img}
-                date={item.date}
-                fish={item.fish}
-                bait={item.bait}
+                // location={item.location}
+                // img={item.img}
+                // date={item.date}
+                // fish={item.fish}
+                // bait={item.bait}
                 plannedTrip={item.plannedTrip}
+                trip={item}
                 setEditItem={setEditItem}
                 setIsEditing={setIsEditing}
+                handleDeleteRequest={handleDeleteRequest}
               />
             )
           }
@@ -66,14 +79,16 @@ export function FishingLogListView({ navigation }) {
           renderItem={({ item }) =>
             item?.plannedTrip === true && (
               <DetailCard
-                location={item.location}
-                img={item.img}
-                date={item.date}
-                fish={item.fish}
-                bait={item.bait}
+                // location={item.location}
+                // img={item.img}
+                // date={item.date}
+                // fish={item.fish}
+                // bait={item.bait}
                 plannedTrip={item.plannedTrip}
+                trip={item}
                 setEditItem={setEditItem}
                 setIsEditing={setIsEditing}
+                handleDeleteRequest={handleDeleteRequest}
               />
             )
           }
@@ -97,21 +112,26 @@ export function FishingLogListView({ navigation }) {
         }}
       >
         <ScrollView>
-          <EditLogForm setIsEditing={setIsEditing} fishLog={editItem} setUpdated={navigation.getParam("setUpdated")} />
+          <EditLogForm
+            setIsEditing={setIsEditing}
+            fishLog={editItem}
+            setUpdated={navigation.getParam("setUpdated")}
+          />
         </ScrollView>
       </Modal>
-
-      <View>
-        <Pressable>
-          <Text style={[styles.toggleButton, styles.addButton]}>
-            Add New Log
-          </Text>
-        </Pressable>
-        <Pressable onPress={toggle}>
-          <Text style={styles.toggleButton}>{buttonTitle}</Text>
-        </Pressable>
-      </View>
-      <View>{fishingLogs}</View>
+      
+        <View>
+          <Pressable onPress={navigation.goBack()}>
+            <Text style={[styles.toggleButton, styles.addButton]}>
+              Add New Log
+            </Text>
+          </Pressable>
+          <Pressable onPress={toggle}>
+            <Text style={styles.toggleButton}>{buttonTitle}</Text>
+          </Pressable>
+        </View>
+        <ScrollView>{fishingLogs}</ScrollView>
+      
     </View>
   );
 }
@@ -123,6 +143,7 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: (20, 10, 10, 10),
     opacity: 67,
+    marginBottom: 50,
   },
   toggleButton: {
     color: "#333",
@@ -142,5 +163,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     margin: 10,
+  },
+  listView: {
+    height: 300,
   },
 });

@@ -51,7 +51,9 @@ useEffect(() => {
     if (nextTrips?.length > 0) {      
       var ndate = new Date(nextTrips[0]?.date);
       ndate = ndate.toDateString().split(" ");
+      
       return`${ndate[1]} ${ndate[2]}`;
+
     } 
   }
 
