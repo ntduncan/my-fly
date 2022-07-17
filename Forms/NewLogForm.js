@@ -17,7 +17,7 @@ import { Formik } from "formik";
 import {CameraRoll} from "@react-native-community/cameraroll";
 // import * as Yup from "yup";
 
-export default function NewLogForm({ navigation, fishLog  }) {
+export default function NewLogForm({ navigation }) {
   //State for the modal
   const [baitList, setBaitList] = useState([]);
   const [fishlist, setFishlist] = useState([]);
@@ -61,12 +61,16 @@ export default function NewLogForm({ navigation, fishLog  }) {
             // bait: ["Bait"],
           }}
           onSubmit={(values) => {
+            console.log(new Date(values.date).valueOf() > new Date().valueOf() ? true : false)
+            
             const fishingLog = {
               location: values.location,
-              date: values.date,
+              date: values.date !== "Date" ? values.date : `${new Date().getMonth()}/${new Date().getDate()}/${new Date().getFullYear()}`,
               img: values.img,
               bait: baitList,
               fish: fishlist,
+              plannedTrip:
+                  new Date(values.date).valueOf() > new Date().valueOf() ? true : false,
             };
 
             fetch("https://myfly-fishing-api.herokuapp.com", {
@@ -75,11 +79,7 @@ export default function NewLogForm({ navigation, fishLog  }) {
               body: JSON.stringify(fishingLog),
             })
               .then(() => {
-                setFishlist([]);
-                setBaitList([]);
-                setSpecies("");
-                setLength("");
-                setBait("");
+                navigation.getParam("loadApp")();
               })
               .catch((err) => console.log(err));
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -11,14 +11,19 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Formik } from "formik";
+import UpdateContext from "../contexts/update-context";
 
-export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
+export default function EditLogForm({ fishLog, setIsEditing, navigation }) {
   //State for the modal
+  const  [location, setLocation] = useState(fishLog.location);
+  const [date, setDate] = useState(fishLog.date);
+  const [img, setImg] = useState(fishLog.img);
   const [baitList, setBaitList] = useState(fishLog.bait);
   const [fishlist, setFishlist] = useState(fishLog.fish);
   const [species, setSpecies] = useState("");
   const [length, setLength] = useState("");
   const [bait, setBait] = useState("");
+  const ctx = useContext(UpdateContext);
 
   const addFish = (e) => {
     e.preventDefault();
@@ -49,34 +54,32 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
           <Text style={styles.pageTitle}>Edit Fishing Log</Text>
           <Formik
             initialValues={{
-              location: "Location",
-              date: "Date",
-              img: "Image",
+              location: location,
+              date: date,
+              img: img,
               
             }}
             onSubmit={(values) => {
               const fishingLog = {
-                location: values.location,
-                date: values.date,
-                img: values.img,
+                location: location,
+                date: date,
+                img: img,
                 bait: baitList,
                 fish: fishlist,
                 plannedTrip:
-                  Date(new Date(values.date)) > Date(new Date()) ? true : false,
+                  Date(new Date(date)) > Date(new Date()) ? true : false,
               };
 
-              fetch("https://myfly-fishing-api.herokuapp.com", {
+              fetch(`https://myfly-fishing-api.herokuapp.com/${fishLog["_id"]}`, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(fishingLog),
               })
               .then(() => {
-                setFishlist([]);
-                setBaitList([]);
-                setSpecies("");
-                setLength("");
-                setBait("");
-                setUpdated(true);
+                ctx.updated = true;
+                navigation.getParam("loadApp")();
+                navigation.goBack();
+                
               })
               .catch((err) => console.log(err));
 
@@ -91,23 +94,23 @@ export default function EditLogForm({ fishLog, setIsEditing, setUpdated }) {
                     <TextInput
                       style={styles.textInput}
                       placeholder="Location"
-                      onChangeText={props.handleChange("location")}
-                      value={fishLog.location}
+                      onChangeText={(text) => setLocation(text)}
+                      value={location}
                     />
                     <TextInput
                       style={styles.textInput}
                       placeholder="Date"
-                      onChangeText={props.handleChange("date")}
+                      onChangeText={(text) => setDate(text)}
                       multiline={true}
                       editable={true}
                       dataDetectorTypes="calendarEvent"
-                      value={fishLog.date}
+                      value={date}
                     />
                     <TextInput
                       style={styles.textInput}
                       placeholder="Image"
-                      onChangeText={props.handleChange("img")}
-                      value={fishLog.img}
+                      onChangeText={(text) => setImg(text)}
+                      value={img}
                     />
                   </View>
 

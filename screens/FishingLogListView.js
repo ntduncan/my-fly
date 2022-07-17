@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -10,20 +10,28 @@ import { DetailCard } from "../components/DetailCard";
 import { NewLogForm } from "../Forms/NewLogForm";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
 import EditLogForm from "../Forms/EditLogForm";
+import UpdateContext from "../contexts/update-context";
 
 export function FishingLogListView({ navigation }) {
+  const ctx = useContext(UpdateContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editItem, setEditItem] = useState({});
   const [listToggle, setListToggle] = useState(false);
   const [buttonTitle, setButtonTitle] = useState("View Planned List");
+  const [id, setId] = useState(0);
 
-  const handleDeleteRequest = (id) => {
-    fetch(`https://myfly-fishing-api.herokuapp.com/${id}`, {
-      method: "DELETE",
-    }).catch((error) => {
-      console.log(error);
-    });
-    navigation.navigate("Dashboard");
+  const handleDeleteRequest = () => {
+    // fetch(`https://myfly-fishing-api.herokuapp.com/${id}`, {
+    //   method: "DELETE",
+    // })
+    // .then(() => {
+    //   setId(0);
+    // })
+    // .catch((error) => {
+    //   console.log("oops");
+    // });
+    navigation.getParam("loadApp")();
+    navigation.goBack();
   };
 
   const [fishingLogs, setFishingLogs] = useState(
@@ -37,6 +45,7 @@ export function FishingLogListView({ navigation }) {
             setEditItem={setEditItem}
             setIsEditing={setIsEditing}
             handleDeleteRequest={handleDeleteRequest}
+            setId={setId}
           />
         )
       }
@@ -57,6 +66,7 @@ export function FishingLogListView({ navigation }) {
                 setEditItem={setEditItem}
                 setIsEditing={setIsEditing}
                 handleDeleteRequest={handleDeleteRequest}
+                setId={setId}
               />
             )
           }
@@ -75,6 +85,7 @@ export function FishingLogListView({ navigation }) {
             setEditItem={setEditItem}
             setIsEditing={setIsEditing}
             handleDeleteRequest={handleDeleteRequest}
+            setId={setId}
             />
             )
           }
@@ -102,7 +113,7 @@ export function FishingLogListView({ navigation }) {
           <EditLogForm
             setIsEditing={setIsEditing}
             fishLog={editItem}
-            setUpdated={navigation.getParam("setUpdated")}
+            navigation={navigation}
           />
         </ScrollView>
       </Modal>
@@ -117,10 +128,10 @@ export function FishingLogListView({ navigation }) {
             <Text style={styles.toggleButton}>{buttonTitle}</Text>
           </Pressable>
         </View>
-        <ScrollView>
+        {/* <ScrollView> */}
           {fishingLogs}
           <View style={styles.buffer}></View>
-        </ScrollView>
+        {/* </ScrollView> */}
       
     </View>
   );

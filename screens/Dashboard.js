@@ -6,36 +6,48 @@ import {
   Pressable,
   Modal,
 } from "react-native";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { LargeCard } from "../components/LargeCard";
 import { NewTripForm } from "../Forms/NewTripForm";
 import DropdownAlert from 'react-native-dropdownalert';
+import UpdateContext from "../contexts/update-context";
 
 export function Dashboard({ navigation, dropDownAlertRef }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [trips, setTrips] = useState();
   const [nextTrips, setNextTrips] = useState([]);
-  const [updated, setUpdated] = useState(true);
+  const ctx = useContext(UpdateContext);
 
   //Set Trips on Initial Render
-useEffect(() => {
+  useEffect(() => {
+    const initTrips = () => {
+      loadApp();
+    }
+    initTrips();
+  }, [setTrips]);
+
+  
+  const loadApp = useCallback(() => {
     fetch("https://myfly-fishing-api.herokuapp.com/")
     .then((response) => {
       return response.json();
     })
     .then((data) => {
       dropDownAlertRef.alertWithType('success', 'Success', 'Trips Loaded');
-
+      
       setNextTrips(data.filter((trip) => trip?.plannedTrip));
       setTrips(data.filter((trip) => !trip?.plannedTrip));
       
     }).catch((error) => {
       console.log(error);
     });
-    
+  })
 
-  }, [updated]);
+  // if(ctx.udpated){ loadApp(); }
 
+  const getDataFromDatabase = () => {
+
+  }
 
   const getTotalFish = () => {
     if (trips?.length > 0) {
@@ -44,6 +56,8 @@ useEffect(() => {
         count += trip.fish.length;
       });
       return count;
+    } else {
+      return 0;
     }
   };
 
@@ -55,6 +69,7 @@ useEffect(() => {
       return`${ndate[1]} ${ndate[2]}`;
 
     } 
+    return "No Plans";
   }
 
   const getLastTripDate = () => {
@@ -63,6 +78,7 @@ useEffect(() => {
       ldate = ldate.toDateString().split(" ");
       return`${ldate[1]} ${ldate[2]}`;
     }
+    return "No Logs";
   }
 
   return (
@@ -74,6 +90,7 @@ useEffect(() => {
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
+          loadApp();
         }}
       >
         <NewTripForm setModalVisible={setModalVisible} dropDownAlertRef={dropDownAlertRef}/>
@@ -90,16 +107,16 @@ useEffect(() => {
 
       <View style={styles.dashboardBody}>
         <View style={styles.main}>
-          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips, setUpdated: setUpdated})}>
+          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips, loadApp: loadApp})}>
             <LargeCard title="Total Trips" content={trips?.length} />
           </Pressable>
-          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips, setUpdated: setUpdated})}>
+          <Pressable onPress={() => navigation.navigate("FishingLogListView", {trips: trips, plannedTrips: nextTrips, loadApp: loadApp})}>
             <LargeCard title="Total Fish" content={getTotalFish()} />
           </Pressable>
           <LargeCard title="Next Trip" content={getNextTripDate()} />  
           <LargeCard title="Last Trip" content={getLastTripDate()} />
 
-          <Pressable onPress={() => navigation.navigate("AddNewLogView")}>
+          <Pressable onPress={() => navigation.navigate("AddNewLogView", {loadApp: loadApp})}>
             <View style={styles.footer}>
               <Text style={[styles.headerText, styles.textLight]}>Log a Trip</Text>
             </View>

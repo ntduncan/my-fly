@@ -16,11 +16,30 @@ export function DetailCard({
   setEditItem,
   setIsEditing,
   handleDeleteRequest,
+  setId
 }) {
   const [catchHidden, setCatchHidden] = useState(false);
   const [imgProvided, setImgProvided] = useState(
     trip.img !== "Image" ? true : false
   );
+
+  console.log(trip.location, trip["_id"]);
+
+  const deleteTrip = () => {
+    // console.log("delete trip: ", trip.location, trip["_id"]);
+    const url = `https://myfly-fishing-api.herokuapp.com/${trip["_id"]}`
+    console.log(url);
+    fetch(url, {
+      method: "DELETE",
+    })
+    .then(() => {
+      console.log(url);
+      handleDeleteRequest()
+    })
+    .catch((error) => {
+      console.log("oops");
+    });
+  }
 
   return (
     <Pressable
@@ -98,7 +117,7 @@ export function DetailCard({
                   plannedTrip: trip.plannedTrip === true ? true : false,
                 });
               }} />
-              <Button title="Delete" onPress={() => handleDeleteRequest(trip["_id"])} />
+              <Button title="Delete" onPress={() => {console.log(trip["_id"]); deleteTrip();}} />
             </View>
           </View>
         )}
