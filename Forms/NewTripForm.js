@@ -46,16 +46,19 @@ export function NewTripForm({ setModalVisible, dropDownAlertRef}) {
     const handleSearch = () => {
       if(search !== ""){
         setIsLoading(true);
-        fetch(`https://myfly-fishing-api.herokuapp.com/search/${search}`)
-          .then((response) => response.json())
+        fetch(`https://myfly-fishing-api.herokuapp.com/search/${search.toLowerCase()}`)
+          .then((response) => response?.json())
           .then((data) => {
+            console.log(data);
             setIsLoading(false);
-            setRecommendation("Recommendation: ", data);
+            if(!data?.message){
+              setRecommendation("Recommendation: " + data.location);
+            } else {
+              setRecommendation(data.message);
+            }
           }
-        ).catch((err) => dropDownAlertRef.alertWithType('error', 'Error', err));
-      } else {
-        setRecommendation("No results found.");
-      }
+        ).catch((err) => console.log(err));
+      } 
     }
     
   return (
@@ -95,13 +98,9 @@ export function NewTripForm({ setModalVisible, dropDownAlertRef}) {
                   title="Search"
                   onPress={()=>handleSearch()}/>
 
-                  {recommendation && 
-                    <View style={styles.recommendationList}>
-                      <Text style={styles.paragraphText} >{recommendation}</Text>
-                    </View>
-                  }
+                  { <Text style={styles.paragraphText} >{recommendation}</Text> }
                   {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-                  
+
           </View>}
         
       </View>

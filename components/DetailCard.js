@@ -107,8 +107,8 @@ export function DetailCard({
             </View>
             <View style={styles.buttonContainer}>
               <Button title="Edit" onPress={() => {
-                setIsEditing(true)
                 setEditItem({
+                  _id: trip["_id"],
                   location: trip.location,
                   date: trip.date,
                   img: trip.img,
@@ -116,6 +116,7 @@ export function DetailCard({
                   fish: trip.fish,
                   plannedTrip: trip.plannedTrip === true ? true : false,
                 });
+                setIsEditing(true)
               }} />
               <Button title="Delete" onPress={() => {console.log(trip["_id"]); deleteTrip();}} />
             </View>

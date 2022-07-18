@@ -43,6 +43,36 @@ export default function EditLogForm({ fishLog, setIsEditing, navigation }) {
     }
   };
 
+  const handleSubmitEdit = () => {
+    const fishingLog = {
+
+    };
+
+    fetch(`https://myfly-fishing-api.herokuapp.com/${fishLog["_id"]}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(      {_id: fishLog._id,
+        location: location,
+        date: date,
+        img: img,
+        bait: baitList,
+        fish: fishlist,
+        plannedTrip:
+          Date(new Date(date)) > Date(new Date()) ? true : false})
+    })
+    .then(() => {
+      console.log("updated " + fishLog["_id"]);
+      ctx.updated = true;
+      navigation.getParam("loadApp")();
+      navigation.goBack();
+      
+    })
+    .catch((err) => console.log(err));
+
+    setIsEditing(false);
+  }
+
+
   return (
     <SafeAreaView  style={styles.newTripContainer} >
       <TouchableWithoutFeedback
@@ -60,30 +90,7 @@ export default function EditLogForm({ fishLog, setIsEditing, navigation }) {
               
             }}
             onSubmit={(values) => {
-              const fishingLog = {
-                location: location,
-                date: date,
-                img: img,
-                bait: baitList,
-                fish: fishlist,
-                plannedTrip:
-                  Date(new Date(date)) > Date(new Date()) ? true : false,
-              };
-
-              fetch(`https://myfly-fishing-api.herokuapp.com/${fishLog["_id"]}`, {
-                method: "PUT",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify(fishingLog),
-              })
-              .then(() => {
-                ctx.updated = true;
-                navigation.getParam("loadApp")();
-                navigation.goBack();
-                
-              })
-              .catch((err) => console.log(err));
-
-              setIsEditing(false);
+              
             }}
           >
             {(props) => {
@@ -183,7 +190,7 @@ export default function EditLogForm({ fishLog, setIsEditing, navigation }) {
                     <Pressable
                       style={styles.submitButton}
                       onPress={() => {
-                        props.handleSubmit();
+                        handleSubmitEdit();
                       }}
                     >
                       <Text>Submit</Text>

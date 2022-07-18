@@ -25,7 +25,6 @@ export function Dashboard({ navigation, dropDownAlertRef }) {
     }
     initTrips();
   }, [setTrips]);
-
   
   const loadApp = useCallback(() => {
     fetch("https://myfly-fishing-api.herokuapp.com/")
