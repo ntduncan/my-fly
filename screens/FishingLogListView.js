@@ -128,10 +128,10 @@ export function FishingLogListView({ navigation }) {
             <Text style={styles.toggleButton}>{buttonTitle}</Text>
           </Pressable>
         </View>
-        {/* <ScrollView> */}
+        <ScrollView>
           {fishingLogs}
           <View style={styles.buffer}></View>
-        {/* </ScrollView> */}
+        </ScrollView>
       
     </View>
   );

@@ -51,14 +51,14 @@ export default function EditLogForm({ fishLog, setIsEditing, navigation }) {
     fetch(`https://myfly-fishing-api.herokuapp.com/${fishLog["_id"]}`, {
       method: "PUT",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(      {_id: fishLog._id,
+      body: JSON.stringify(      
+        {_id: fishLog._id,
         location: location,
         date: date,
         img: img,
         bait: baitList,
         fish: fishlist,
-        plannedTrip:
-          Date(new Date(date)) > Date(new Date()) ? true : false})
+        plannedTrip: false})
     })
     .then(() => {
       console.log("updated " + fishLog["_id"]);
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     margin: 20,
     marginTop: 140,
     borderRadius: 20,
-    height: "80%",
+    // height: "100%",
     padding: 20,
     paddingBottom: 40,
   },

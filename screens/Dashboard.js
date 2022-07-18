@@ -42,11 +42,6 @@ export function Dashboard({ navigation, dropDownAlertRef }) {
     });
   })
 
-  // if(ctx.udpated){ loadApp(); }
-
-  const getDataFromDatabase = () => {
-
-  }
 
   const getTotalFish = () => {
     if (trips?.length > 0) {

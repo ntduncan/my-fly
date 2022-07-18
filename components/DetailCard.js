@@ -26,9 +26,8 @@ export function DetailCard({
   console.log(trip.location, trip["_id"]);
 
   const deleteTrip = () => {
-    // console.log("delete trip: ", trip.location, trip["_id"]);
+    console.log("delete trip: ", trip.location, trip["_id"]);
     const url = `https://myfly-fishing-api.herokuapp.com/${trip["_id"]}`
-    console.log(url);
     fetch(url, {
       method: "DELETE",
     })
@@ -118,10 +117,28 @@ export function DetailCard({
                 });
                 setIsEditing(true)
               }} />
-              <Button title="Delete" onPress={() => {console.log(trip["_id"]); deleteTrip();}} />
+              <Button title="Delete" onPress={() => {deleteTrip();}} />
             </View>
           </View>
         )}
+        {trip?.plannedTrip && (
+                      <View style={styles.buttonContainer}>
+                      <Button title="Edit" onPress={() => {
+                        setEditItem({
+                          _id: trip["_id"],
+                          location: trip.location,
+                          date: trip.date,
+                          img: trip.img,
+                          bait: trip.bait,
+                          fish: trip.fish,
+                          plannedTrip: trip.plannedTrip === true ? true : false,
+                        });
+                        setIsEditing(true)
+                      }} />
+                      <Button title="Delete" onPress={() => {console.log(trip["_id"]); deleteTrip();}} />
+                    </View>
+        )}
+
       </View>
     </Pressable>
   );
